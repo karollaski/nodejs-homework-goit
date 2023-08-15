@@ -24,6 +24,7 @@ const schema = Joi.object({
     .trim()
     .required()
     .messages(customMessages.phone),
+  favorite: Joi.boolean(),
 });
 
 module.exports = schema;
