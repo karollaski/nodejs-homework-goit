@@ -17,7 +17,11 @@ const schema = Joi.object({
     .trim()
     .required()
     .messages(customMessages.name),
-  email: Joi.string().email().trim().required(),
+  email: Joi.string().email().trim().required().messages({
+    "string.base": "E-mail must be a string",
+    "string.email": "Enter a valid e-mail address",
+    "any.required": "E-mail is required",
+  }),
   phone: Joi.string()
     .min(3)
     .max(16)

@@ -1,10 +1,13 @@
-const contactsService = require("../services/contact.service");
-const validation = require("../utils/validation");
+const service = require("../services/service");
+const validation = require("../utils/validationContact");
 
 const get = async (req, res, next) => {
   try {
-    const { query } = req;
-    const results = await contactsService.getAllContacts(query);
+    const { query, user } = req;
+    const results = await service.getAllContacts({
+      ...query,
+      owner: user._id,
+    });
     res.json({
       status: "success",
       code: 200,
@@ -20,8 +23,9 @@ const get = async (req, res, next) => {
 
 const getById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const results = await contactsService.getOneContact(id);
+    const { params, user } = req;
+    const { id } = params;
+    const results = await service.getOneContact(id, user._id);
     if (!results) {
       res.status(404).json({
         status: "not-found",
@@ -51,9 +55,12 @@ const getById = async (req, res) => {
 
 const create = async (req, res, next) => {
   try {
-    // const { body } = req;
+    const { user } = req;
     const body = await validation.validateAsync(req.body);
-    const results = await contactsService.createContact(body);
+    const results = await service.createContact({
+      ...body,
+      owner: user._id,
+    });
     res.json({
       status: "success",
       code: 201,
@@ -70,9 +77,9 @@ const create = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const { id } = req.params;
-    // const { body } = req;
+    const { user } = req;
     const body = await validation.validateAsync(req.body);
-    const results = await contactsService.updateContact(id, body);
+    const results = await service.updateContact(id, user._id, body);
     results
       ? res.json({
           status: "success",
@@ -96,9 +103,9 @@ const update = async (req, res, next) => {
 const updateFavorite = async (req, res, next) => {
   try {
     const { id } = req.params;
-    // const { favorite } = req.body;
+    const { user } = req;
     const { favorite } = await validation.validateAsync(req.body);
-    const results = await contactsService.updateFavoriteContact(id, favorite);
+    const results = await service.updateFavoriteContact(id, user._id, favorite);
     results
       ? res.json({
           status: "success",
@@ -122,7 +129,8 @@ const updateFavorite = async (req, res, next) => {
 const remove = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const results = await contactsService.removeContact(id);
+    const { user } = req;
+    const results = await service.removeContact(id, user._id);
     results
       ? res.json({
           status: "success",
