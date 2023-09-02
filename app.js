@@ -8,14 +8,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use(express.json());
+require("./config/passport");
+
 const contactsRouter = require("./routes/api/contacts");
+const userRoutes = require("./routes/api/user.routes");
 app.use("/api/", contactsRouter);
+app.use("/api/user", userRoutes);
 
 app.use((_, res, __) => {
   res.status(404).json({
     status: "error",
     code: 404,
-    message: "Use api on routes: /api/contacts",
+    message: "Use api on routes: /api/contacts or /api/auth",
     data: "Not found",
   });
 });
