@@ -16,8 +16,7 @@ app.use(express.static("public"));
 
 const contactsRouter = require("./routes/api/contacts");
 const userRoutes = require("./routes/api/user.routes");
-const uploadRoutes = require("./routes/api/upload.routes");
-app.use("/api/", contactsRouter, uploadRoutes);
+app.use("/api/", contactsRouter);
 app.use("/api/user", userRoutes);
 
 app.use((_, res, __) => {
