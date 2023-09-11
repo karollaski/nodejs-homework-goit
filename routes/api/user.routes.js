@@ -21,6 +21,8 @@ const upload = multer({
 });
 
 router.post("/signup", authController.signup);
+router.get("/verify/:verificationToken", authController.verifyEmail);
+router.post("/verify", authController.repeatEmailVerify);
 router.post("/login", authController.login);
 router.post("/logout", authController.logout);
 router.get("/current", authController.getCurrent);
